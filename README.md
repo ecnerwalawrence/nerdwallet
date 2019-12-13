@@ -17,12 +17,11 @@ RunSchedule() - starts the daemon
 Model:
 Task
 
-
-
 Notes:
 - I was able to find a ORM for postgresql.  I tried structuring the code to 
 use models.  
 - Ideally, I would use transaction, so the states are consistent.  However, I did not have the cycles to correctly implement the transaction functionality of this library.  Also, locking does have its drawback with performance, and hinders parallelism.  Therefore, I will follow the AWS SQS model, where there is a small chance multiple workers executing the same task.
+- Please note I have fake FAILUREs, so I can simulate updating different states on the database.
 
 === SETUP (MACOS) ===
 1. Clone repo
@@ -35,6 +34,16 @@ https://golang.org/dl/
 GO111MODULE=on
 
 4. cd into repo
+
+5. Setup Postgres
+Note, if you change the name, you need to fix the code.
+DatabaseName: 
+nerdwallet_ecnerwal 
+DatabaseUser:
+postgres
+
+6. Initialize Schema
+psql nerdwallet_ecnerwal < schema.sql
 
 === RUN ===
 

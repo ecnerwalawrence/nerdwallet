@@ -11,8 +11,8 @@ var testDB *pg.DB = initTestDB()
 
 func initTestDB() *pg.DB {
 	return pg.Connect(&pg.Options{
-		User:     "postgres",
-		Database: "nerdwallet",
+		User:     DatabaseUser,
+		Database: DatabaseName,
 	})
 }
 
@@ -85,6 +85,12 @@ func TestTask(t *testing.T) {
 		expectedState := "failure"
 		if tasks2[0].State != expectedState {
 			t.Errorf("Expected state to be '%s', but result:'%s'", expectedState, tasks2[0].State)
+		}
+
+		// Empty Task List should not error
+		err = TaskBulkUpdateState(testDB, &[]Task{}, "failure")
+		if err != nil {
+			t.Errorf("Expected tasks to be not nil and not error result:%v", err)
 		}
 	})
 	resetTestDB()
